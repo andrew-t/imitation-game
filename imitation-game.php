@@ -14,13 +14,17 @@ function generateChallenge() {
     // TODO - add real challenges
     switch (rand(1, 2)) {
         case 1:
+            $a = rand(1, 10);
+            $b = rand(1, 10);
             return array(
-                'question' => 'What is five in digits?',
-                'answer' => '5');
+                'question' => "What is $a + $b?",
+                'answer' => $a + $b);
         case 2:
+            $a = rand(5, 10);
+            $b = rand(1, 5);
             return array(
-                'question' => 'What is 5 in words?',
-                'answer' => 'Five');
+                'question' => "What is $a - $b?",
+                'answer' => $a - $b);
     }
 }
 
@@ -47,12 +51,12 @@ function answerIsRight() {
     return false;
 }
 
-function show_captcha() {
+function showCaptcha() {
     if (is_user_logged_in()) { return; }
     $captcha = generateChallenge();
     ?>
     <p class="comment-form-captcha">
-        <label for="comment_captcha_code" class="small"><?php echo $captcha['question']; ?></label>
+        <label for="comment_captcha_code" class="small"><?php echo $captcha['question']; ?> *</label>
         <input type="text" name="comment_captcha_code" class="text" value="" />
     </p>
     <input type="hidden" name="comment_captcha_hash" value="<?php 
@@ -61,7 +65,7 @@ function show_captcha() {
     <?php 
 }
 
-function check_captcha() {
+function checkCaptcha() {
     if (!answerIsRight())
         wp_die('Sorry, we could not prove you are a human to <i>p</i>&nbsp;&lt;&nbsp;0.05. Please try again.');
 }
@@ -70,6 +74,6 @@ function registerSettings() {
     register_setting('captcha', 'captcha-salt');
 }
 
-add_action('comment_form_after_fields', 'show_captcha');
-add_action('pre_comment_on_post', 'check_captcha');
+add_action('comment_form_after_fields', 'showCaptcha');
+add_action('pre_comment_on_post', 'checkCaptcha');
 add_action('admin_init', 'registerSettings');

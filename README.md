@@ -1,6 +1,6 @@
 # The Imitation Game
 
-A dead simple Captcha implementation, because I couldn't find a good one.
+A dead simple Wordpress Captcha plugin, because I couldn't find a good one.
 
 It thinks of a question and an answer, then it hashes the answer with the current time and page ID, and some random salt. That means any given hash/answer combination is good for one page or one blog, for three hours (by default). Obviously you can do a small spam attack with that, but you can't totally automate it. For any small blog, that should be enough to put attackers off.
 
