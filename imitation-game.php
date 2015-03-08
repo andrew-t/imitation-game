@@ -42,6 +42,7 @@ function generateHash($time, $postId, $answer) {
 }
 
 function answerIsRight() {
+    if (is_user_logged_in()) return true;
     $time = getTime();
     for ($timeOffset = 0; $timeOffset < 3; ++$timeOffset)
         if ($_POST['comment_captcha_hash'] == generateHash($time - $timeOffset,
@@ -52,7 +53,7 @@ function answerIsRight() {
 }
 
 function showCaptcha() {
-    if (is_user_logged_in()) { return; }
+    if (is_user_logged_in()) return;
     $captcha = generateChallenge();
     ?>
     <p class="comment-form-captcha">
@@ -65,15 +66,24 @@ function showCaptcha() {
     <?php 
 }
 
-function checkCaptcha() {
+function checkCaptchaOnComment() {
     if (!answerIsRight())
         wp_die('Sorry, we could not prove you are a human to <i>p</i>&nbsp;&lt;&nbsp;0.05. Please try again.');
+}
+
+function checkCaptchaOnRegistration($errors) {
+    if (!answerIsRight())
+        $errors->add( 'failed_verification',
+            'Sorry, we could not prove you are a human to <i>p</i>&nbsp;&lt;&nbsp;0.05. Please try again.');
+    return $errors;
 }
 
 function registerSettings() {
     register_setting('captcha', 'captcha-salt');
 }
 
+add_action('register_form', 'showCaptcha');
+add_action('registration_errors', 'checkCaptchaOnRegistration', 10, 3);
 add_action('comment_form_after_fields', 'showCaptcha');
-add_action('pre_comment_on_post', 'checkCaptcha');
+add_action('pre_comment_on_post', 'checkCaptchaOnComment');
 add_action('admin_init', 'registerSettings');
