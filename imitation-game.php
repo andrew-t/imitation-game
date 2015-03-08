@@ -7,7 +7,7 @@
  * Author:        Andrew Taylor
  * Author URI:    http://www.andrewt.net/
  *
- * You will probablt want to make your own challenges rather than rely on the ones here.
+ * You will probably want to make your own challenges rather than rely on the ones here.
  */
 
 function generateChallenge() {
@@ -71,7 +71,7 @@ function checkCaptchaOnComment() {
         wp_die('Sorry, we could not prove you are a human to <i>p</i>&nbsp;&lt;&nbsp;0.05. Please try again.');
 }
 
-function checkCaptchaOnRegistration($errors) {
+function checkCaptchaOnRegistration($errors, $sanitized_user_login, $user_email) {
     if (!answerIsRight())
         $errors->add( 'failed_verification',
             'Sorry, we could not prove you are a human to <i>p</i>&nbsp;&lt;&nbsp;0.05. Please try again.');
