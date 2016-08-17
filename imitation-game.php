@@ -11,21 +11,39 @@
  */
 
 function generateChallenge() {
-    // TODO - add real challenges
-    switch (rand(1, 2)) {
+    switch (rand(1, 3)) {
+        // case 1:
+        //     $a = rand(1, 10);
+        //     $b = rand(1, 10);
+        //     return array(
+        //         'question' => "What is $a + $b?",
+        //         'answer' => $a + $b);
+        // case 2:
+        //     $a = rand(5, 10);
+        //     $b = rand(1, 5);
+        //     return array(
+        //         'question' => "What is $a - $b?",
+        //         'answer' => $a - $b);
+        //         switch (rand(1,2)) {
         case 1:
-            $a = rand(1, 10);
-            $b = rand(1, 10);
-            return array(
-                'question' => "What is $a + $b?",
-                'answer' => $a + $b);
+            $r = alan_randomstring(4, 7);
+            $question = "Type '$r' backwards";
+            $answer = alan_reversestring($r);
+            break;
         case 2:
-            $a = rand(5, 10);
-            $b = rand(1, 5);
-            return array(
-                'question' => "What is $a - $b?",
-                'answer' => $a - $b);
+            $r = alan_randomstring(7, 10);
+            $n = rand(3, 6);
+            $question = "Type the first $n letters of '$r'";
+            $answer = substr($r, 0, $n);
+            break;
+        case 3:
+            $r = alan_randomstring(7, 10);
+            $n = rand(3, 6);
+            $question = "Type the last $n letters of '$r'";
+            $answer = substr($r, -$n);
+            break;
     }
+    return array('question' => $question, 'answer' => $answer);
 }
 
 function getTime() {
@@ -87,3 +105,17 @@ add_action('registration_errors', 'checkCaptchaOnRegistration', 10, 3);
 add_action('comment_form_after_fields', 'showCaptcha');
 add_action('pre_comment_on_post', 'checkCaptchaOnComment');
 add_action('admin_init', 'registerSettings');
+
+function alan_randomstring($min, $max) {
+    $alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    $str = '';
+    for ($i=0; $i < rand($min, $max); $i++) 
+        $str .= $alphabet[rand(0,25)];
+    return $str;
+}
+
+function alan_reversestring($str) {
+    $out = '';
+    for ($i=strlen($str); $i > 0; $out .= $str[--$i]);
+    return $out;
+}
